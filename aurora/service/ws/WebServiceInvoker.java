@@ -41,6 +41,7 @@ public class WebServiceInvoker extends AbstractEntry {
 	int readTimeout = DEFAULT_READ_TIMEOUT;
 	String user;
 	String password;
+	String soapAction;
 	
 	boolean noCDATA = false;
 
@@ -90,8 +91,13 @@ public class WebServiceInvoker extends AbstractEntry {
 
 			// set request header
 			addAuthorization(httpUrlConnection, context);
-			httpUrlConnection.setRequestProperty("SOAPAction", "urn:anonOutInOp");
-			httpUrlConnection.setRequestProperty("Content-Type", "text/xml; charset=UTF-8");
+			//set soapAction when soapAction exists 
+			if(soapAction == null){
+		           httpUrlConnection.setRequestProperty("SOAPAction", "urn:anonOutInOp");
+			}else{
+			   httpUrlConnection.setRequestProperty("SOAPAction", soapAction);
+			}	   httpUrlConnection.setRequestProperty("Content-Type", "text/xml; charset=UTF-8");
+			
 			httpUrlConnection.connect();
 			OutputStream os = httpUrlConnection.getOutputStream();
 			OutputStreamWriter writer = new OutputStreamWriter(os,"UTF-8");
@@ -250,5 +256,13 @@ public class WebServiceInvoker extends AbstractEntry {
 
 	public void setNoCDATA(boolean noCDATA) {
 		this.noCDATA = noCDATA;
+	}
+
+	public String getSoapAction() {
+		return soapAction;
+	}
+
+	public void setSoapAction(String soapAction) {
+		this.soapAction = soapAction;
 	}
 }
